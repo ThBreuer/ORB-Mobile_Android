@@ -1,0 +1,16 @@
+<resources>
+    <string name="pref_title_about">Über</string>
+    <string name="pref_title_exit">Beenden</string>
+    <string name="version">Version %s</string>
+    <string name="orb_not_connected">nicht verbunden</string>
+    <string name="batterie">Batt</string>
+    <string name="app_name">ORB Mobile</string>
+    <string name="pref_title_url">Open Roberta Lab URL</string>
+    <string name="pref_change">Type your new URL ...</string>
+    <string name="about_app_content">ORB-Mobile wurde entwickelt ...</string>
+    <string name="msg_cancel">Abbrechen</string>
+    <string name="msg_OK">OK</string>
+    <string name="about_publish">Über ....</string>
+    <string name="send_to_orb">An ORB senden</string>
+
+</resources>
