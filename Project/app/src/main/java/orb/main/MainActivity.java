@@ -500,12 +500,12 @@ public class MainActivity extends Activity
                 if( orb.isConnected() )
                 {
                     viewStatus.setText( orb.getSettings().getName() );
-                    viewVoltage.setText( format( Locale.getDefault(), "%s: %.1f V", getString(R.string.batterie), orb.getVcc() ) );
+                    viewVoltage.setText( format( Locale.getDefault(), "%s: %.1f V", getString(R.string.text_state_batterie), orb.getVcc() ) );
                 }
                 else
                 {
-                    viewStatus.setText( R.string.orb_not_connected );
-                    viewVoltage.setText( format("%s: --- V", getString(R.string.batterie) ) );
+                    viewStatus.setText( R.string.text_state_orb_not_connected);
+                    viewVoltage.setText( format("%s: --- V", getString(R.string.text_state_batterie) ) );
                 }
             }
         });

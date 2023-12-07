@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 //*************************************************************************************************
@@ -51,10 +52,10 @@ public class Util {
         userInput.setText(defaultValue);
         AlertDialog.Builder prefDialogBuilder = new AlertDialog.Builder(orLabActivity);
         prefDialogBuilder.setView(prefView);
-        prefDialogBuilder.setMessage(R.string.pref_change);
+        prefDialogBuilder.setMessage(R.string.text_change);
         prefDialogBuilder.setTitle(R.string.pref_title_url);
         prefDialogBuilder.setCancelable(false);
-        prefDialogBuilder.setPositiveButton(R.string.msg_OK,
+        prefDialogBuilder.setPositiveButton(R.string.btn_OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //-------------------------------------------
@@ -68,7 +69,7 @@ public class Util {
                         dialog.dismiss();
                     }
                 });
-        prefDialogBuilder.setNegativeButton(R.string.msg_cancel,
+        prefDialogBuilder.setNegativeButton(R.string.btn_cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
@@ -85,7 +86,9 @@ public class Util {
         aboutDialogBuilder.setTitle(R.string.pref_title_about);
         aboutDialogBuilder.setView(aboutView);
         TextView textAppAbout = aboutView.findViewById(R.id.textAppAbout);
-        textAppAbout.setText(R.string.about_app_content);
+        textAppAbout.setText(R.string.text_about_content);
+        ImageView imageAppAbout = aboutView.findViewById(R.id.imageAppAbout);
+        imageAppAbout.setImageResource(R.drawable.logo_image);
 
         //-----------------------------------------------------------
         // TB: Images and text deleted
@@ -93,13 +96,13 @@ public class Util {
 
         String versionName = BuildConfig.VERSION_NAME;
         TextView textVersion = aboutView.findViewById(R.id.textVersion);
-        textVersion.setText(orLabActivity.getString(R.string.version, versionName));
+        textVersion.setText(orLabActivity.getString(R.string.text_about_version, versionName));
         TextView textPublish = aboutView.findViewById(R.id.textPublish);
         textPublish.setMovementMethod(LinkMovementMethod.getInstance());
-        textPublish.setText(R.string.about_publish);
+        textPublish.setText(R.string.text_about_publish);
         aboutDialogBuilder
                 .setCancelable(false)
-                .setPositiveButton(R.string.msg_OK,
+                .setPositiveButton(R.string.btn_OK,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();

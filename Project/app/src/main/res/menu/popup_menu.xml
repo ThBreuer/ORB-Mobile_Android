@@ -6,13 +6,13 @@
         android:title="@string/pref_title_url"/>
     <item
         android:id="@+id/action_connect"
-        android:title="Connect" />
-    <item
-        android:id="@+id/service"
-        android:title="Service" />
+        android:title="@string/pref_connect" />
     <item
         android:id="@+id/configORB"
-        android:title="Configure ORB" />
+        android:title="@string/pref_configure_orb" />
+    <item
+        android:id="@+id/service"
+        android:title="@string/pref_service" />
     <item
         android:id="@+id/about"
         android:title="@string/pref_title_about" />

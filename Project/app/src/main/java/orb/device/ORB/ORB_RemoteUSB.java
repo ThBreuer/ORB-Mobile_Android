@@ -36,7 +36,7 @@ class ORB_RemoteUSB extends ORB_Remote
     private UsbRequest          requestIN;
     private UsbRequest          requestOUT;
     private boolean             usbConnected = false;
-    private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+    private static final String ACTION_USB_PERMISSION = "USB_PERMISSION"; //"com.android.example.USB_PERMISSION";
     private static final String TAG = "ORB_USB";
 
     //---------------------------------------------------------------
@@ -82,17 +82,23 @@ class ORB_RemoteUSB extends ORB_Remote
         while( it.hasNext() )
         {
             UsbDevice device = it.next();
+            if( mUsbManager.hasPermission( device ) )
+            {
+                setDevice( device );
+            }
+            else
+            {
+                // final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 
-            final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+                PendingIntent permissionIntent = PendingIntent.getBroadcast(activity,
+                        0,
+                        new Intent(ACTION_USB_PERMISSION),
+                        PendingIntent.FLAG_IMMUTABLE);
+                IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+                activity.registerReceiver(usbReceiver, filter);
 
-            PendingIntent permissionIntent = PendingIntent.getBroadcast( activity,
-                                                                         0,
-                                                                         new Intent(ACTION_USB_PERMISSION),
-                                                                         0 );
-            IntentFilter filter = new IntentFilter( ACTION_USB_PERMISSION );
-            activity.registerReceiver( usbReceiver, filter );
-
-            mUsbManager.requestPermission( device, permissionIntent );
+                mUsbManager.requestPermission(device, permissionIntent);
+            }
         }
     }
 

@@ -157,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:onClick="onClick_SendToORB"
-                android:text="@string/msg_OK" />
+                android:text="@string/btn_OK" />
 
             <Button
                 android:id="@+id/button2"
@@ -165,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:onClick="onClick_cancel"
-                android:text="@string/msg_cancel" />
+                android:text="@string/btn_cancel" />
 
 
         </TableRow>

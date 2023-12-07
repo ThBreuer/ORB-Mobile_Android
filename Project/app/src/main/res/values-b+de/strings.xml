@@ -1,16 +1,16 @@
 <resources>
     <string name="pref_title_about">Über</string>
     <string name="pref_title_exit">Beenden</string>
-    <string name="version">Version %s</string>
-    <string name="orb_not_connected">nicht verbunden</string>
-    <string name="batterie">Batt</string>
-    <string name="app_name">ORB Mobile</string>
     <string name="pref_title_url">Open Roberta Lab URL</string>
-    <string name="pref_change">Type your new URL ...</string>
-    <string name="about_app_content">ORB-Mobile wurde entwickelt ...</string>
-    <string name="msg_cancel">Abbrechen</string>
-    <string name="msg_OK">OK</string>
-    <string name="about_publish">Über ....</string>
-    <string name="send_to_orb">An ORB senden</string>
+    <string name="pref_connect">Mit Roboter verbinden</string>
+    <string name="pref_service">Service</string>
+    <string name="pref_configure_orb">ORB konfigurieren</string>
+    <string name="text_about_version">Version %s</string>
+    <string name="text_state_orb_not_connected">Roboter nicht verbunden</string>
+    <string name="text_state_batterie">Batt</string>
+    <string name="text_change">Gebe hier die neue URL für das Open Roberta Lab ein, etwa so:  http://ip:port</string>
+    <string name="text_about_content"><i>ORB-Mobile</i> ist eine App zur Steuerung von Robotern, die mit dem <b>O</b>pen-<b>R</b>obotic-<b>B</b>oard ausgestattet sind und mit <a target="_blank" href="https://www.open-roberta.org/">»Open Roberta Lab«</a> programmiert werden.</string>
+    <string name="btn_cancel">Abbrechen</string>
+    <string name="btn_OK">OK</string>
 
 </resources>
