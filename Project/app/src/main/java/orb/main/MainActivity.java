@@ -58,6 +58,7 @@ import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.util.Locale;
 
+import orb.device.Monitor.Monitor_Activity;
 import orb.robot.RobotCommunicator;
 import orb.robot.orb.ORB_Communicator;
 import orb.device.ORB.ORB_Manager;
@@ -79,6 +80,7 @@ public class MainActivity extends Activity
     private static final int REQUEST_FILENAME         = 1;
     private static final int REQUEST_BLUETOOTH_DEVICE = 3;
     private static final int REQUEST_ORB_CONFIG       = 4;
+    private static final int REQUEST_MONITOR          = 5;
 
     private RobotCommunicator    robotCommunicator;
     private ORB_Manager          orbManager;
@@ -95,7 +97,7 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // layout is your layout.xml
+        setContentView(R.layout.main_activity); // layout is your layout.xml
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -271,11 +273,18 @@ public class MainActivity extends Activity
             if (target.equals("internal")) {
                 if (type.equals("identify")) {
                     this.identify(newMsg);
-                } else if (type.equals("setRobot")) {
+                }
+                else if (type.equals("setRobot")) {
                     //-----------------------------------------------
                     // TB: ORB is the only robot system that is
                     //     supported. Nothing to do here
                     //-----------------------------------------------
+                }
+                else if( (type.equals("startMonitor"))) {
+                    startMonitor();
+                }
+                else if( (type.equals("stopMonitor"))) {
+                    stopMonitor();
                 }
             } else if (target.equals(this.robotCommunicator.ROBOT))
                 this.robotCommunicator.jsToRobot(newMsg);
@@ -336,6 +345,13 @@ public class MainActivity extends Activity
                     // TB: Additional menu item: Connect to ORB
                     case R.id.action_connect:
                         BT_StartDeviceList(orbManager.isUSBavailable());
+                        break;
+                    //-----------------------------------------------
+
+                    //-----------------------------------------------
+                    // TB: Additional menu item: Monitor
+                    case R.id.monitor:
+                        startMonitor();
                         break;
                     //-----------------------------------------------
 
@@ -464,6 +480,26 @@ public class MainActivity extends Activity
     //---------------------------------------------------------------
     // TB: Additional menu item: Configure the ORB
     //---------------------------------------------------------------------------------------------
+    void startMonitor()
+    {
+        Monitor_Activity.DataHolder.setData( "" );
+
+        Intent intent = new Intent( this, Monitor_Activity.class );
+        startActivity( intent );
+
+    }
+    //---------------------------------------------------------------
+    // TB: Additional menu item: Configure the ORB
+    //---------------------------------------------------------------------------------------------
+    void stopMonitor()
+    {
+        Monitor_Activity.DataHolder.stopMonitor();
+    }
+    //---------------------------------------------------------------
+
+    //---------------------------------------------------------------
+    // TB: Additional menu item: Configure the ORB
+    //---------------------------------------------------------------------------------------------
     void configORB()
     {
         if( orbManager != null )
@@ -504,7 +540,7 @@ public class MainActivity extends Activity
                 }
                 else
                 {
-                    viewStatus.setText( R.string.text_state_orb_not_connected);
+                    viewStatus.setText( R.string.text_state_orb_not_connected );
                     viewVoltage.setText( format("%s: --- V", getString(R.string.text_state_batterie) ) );
                 }
             }

@@ -16,9 +16,13 @@ import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.hardware.usb.UsbRequest;
 import android.util.Log;
+
+import android.widget.Toast;
+
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Iterator;
+
 
 // *******************************************************************
 /**
@@ -47,6 +51,18 @@ class ORB_RemoteUSB extends ORB_Remote
         this.mUsbManager = (UsbManager)activity.getSystemService(Context.USB_SERVICE);
         this.bufferIN    = ByteBuffer.allocate( 128 );
         this.bufferOUT   = ByteBuffer.allocate( 128 );
+
+        PendingIntent permissionIntent = PendingIntent.getBroadcast(activity,
+                0,
+                new Intent(UsbManager.ACTION_USB_DEVICE_ATTACHED),
+                PendingIntent.FLAG_MUTABLE);
+        IntentFilter filter = new IntentFilter(UsbManager.ACTION_USB_DEVICE_ATTACHED);
+
+        activity.registerReceiver(usbReceiver, filter);
+
+        open();
+
+        //mUsbManager.requestPermission(device, permissionIntent);
     }
 
     //---------------------------------------------------------------
@@ -54,53 +70,60 @@ class ORB_RemoteUSB extends ORB_Remote
     {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (ACTION_USB_PERMISSION.equals(action)) {
-                synchronized (this) {
-                    UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
-                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                        if(device != null){
-                            //call method to set up device communication
-                            setDevice(device);
-                        }
-                    }
-                    else {
-                        Log.d(TAG, "permission denied for device " + device);
-                    }
+            if(    ACTION_USB_PERMISSION.equals(action)
+                && intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false) )
+            {
+                synchronized (this) {
+                    open();
                 }
             }
+            else if( UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action) )
+            {
+                open(); //setDevice(device);
+            }
+            else if( UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action) )
+            {
+/*                if( mDevice != null && mDevice.equals(device) )
+                {
+                    setDevice(null);
+                }
+ */
+                close();
+            }
+
         }
     };
 
     //---------------------------------------------------------------
     public void open( )
     {
-        HashMap<String, UsbDevice> map = mUsbManager.getDeviceList();
+                HashMap<String, UsbDevice> map = mUsbManager.getDeviceList();
 
-        Iterator<UsbDevice> it = map.values().iterator();
+                Iterator<UsbDevice> it = map.values().iterator();
 
         while( it.hasNext() )
         {
-            UsbDevice device = it.next();
+                    UsbDevice device = it.next();
             if( mUsbManager.hasPermission( device ) )
             {
                 setDevice( device );
             }
             else
             {
-                // final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+                        // final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 
-                PendingIntent permissionIntent = PendingIntent.getBroadcast(activity,
-                        0,
-                        new Intent(ACTION_USB_PERMISSION),
-                        PendingIntent.FLAG_IMMUTABLE);
-                IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-                activity.registerReceiver(usbReceiver, filter);
+                        PendingIntent permissionIntent = PendingIntent.getBroadcast(activity,
+                                0,
+                                new Intent(ACTION_USB_PERMISSION),
+                                PendingIntent.FLAG_MUTABLE);
+                        IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+                        activity.registerReceiver(usbReceiver, filter);
 
-                mUsbManager.requestPermission(device, permissionIntent);
+                        mUsbManager.requestPermission(device, permissionIntent);
+                    }
+                }
             }
-        }
-    }
 
     //---------------------------------------------------------------
     public boolean isAvailable()
@@ -120,6 +143,17 @@ class ORB_RemoteUSB extends ORB_Remote
             mConnection.close();
         }
         usbConnected = false;
+
+        // todo Toast raus???
+        activity.runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Toast.makeText(activity,"USB Verbindung getrennt",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         // todo: close usb device
     }
 
@@ -177,6 +211,16 @@ class ORB_RemoteUSB extends ORB_Remote
                 requestOUT = new UsbRequest();
                 requestOUT.initialize( mConnection, epOUT );
                 usbConnected = true;
+
+                // Toast raus???
+               activity.runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        Toast.makeText(activity,"Mit ORB über USB verbunden",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
             else
             {
