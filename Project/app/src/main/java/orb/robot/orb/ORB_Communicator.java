@@ -13,6 +13,9 @@ import org.json.JSONObject;
 import orb.device.AndroidSensor.AndroidSensor_Manager;
 import orb.device.AndroidSensor.AndroidSensor_Report;
 import orb.device.AndroidSensor.AndroidSensor_Sensor;
+import orb.device.Monitor.Monitor_Activity;
+import orb.device.Monitor.Monitor_Manager;
+import orb.device.Monitor.Monitor_Report;
 import orb.device.ORB.ORB_Manager;
 import orb.device.ORB.ORB_Report;
 import orb.device.ORB.cPropFromORB;
@@ -30,7 +33,9 @@ import orb.robot.RobotCommunicator;
 public class ORB_Communicator extends    RobotCommunicator
                               implements Runnable,
                                          ORB_Report,
-                                         AndroidSensor_Report
+                                         AndroidSensor_Report,
+                                         Monitor_Report
+
 {
     //---------------------------------------------------------------
     public final ORB_Manager      orbManager;
@@ -39,9 +44,12 @@ public class ORB_Communicator extends    RobotCommunicator
     private MainActivity          mainActivity;
     private WebView               webView;
     private AndroidSensor_Manager androidSensorManager;
+    private Monitor_Manager monitorManager;
+
     private java.lang.Thread      mainThread;
     private boolean runMainThread = false;
     private boolean runFlag       = false;
+
     private static final String TAG = ORB_Communicator.class.getSimpleName();
 
     //---------------------------------------------------------------
@@ -53,6 +61,7 @@ public class ORB_Communicator extends    RobotCommunicator
 
         orbManager           = new ORB_Manager          ( this, mainActivity );
         androidSensorManager = new AndroidSensor_Manager( this, mainActivity );
+        monitorManager       = new Monitor_Manager      ( this );
 
         mainThread = new Thread( this );
         if( mainThread.getState() == Thread.State.NEW )
@@ -71,6 +80,8 @@ public class ORB_Communicator extends    RobotCommunicator
         runMainThread = false;
         orbManager.close();
         androidSensorManager.close();
+        monitorManager.close();
+
     }
 
     //---------------------------------------------------------------
@@ -81,7 +92,11 @@ public class ORB_Communicator extends    RobotCommunicator
         {
             orbManager.update();
             androidSensorManager.update();
+            monitorManager.update();
             mainActivity.setTextStatus( orbManager );
+
+            monitorManager.setTextStatus( orbManager );
+
             try
             {
                 Thread.sleep( 10 ); // todo check timing
@@ -118,6 +133,9 @@ public class ORB_Communicator extends    RobotCommunicator
                 case "settingsToORB": handle_settingsToORB( msg ); runFlag =  true; break;
                 case "commandToAS":   handle_commandToAS  ( msg ); runFlag =  true; break;
                 case "configToAS":    handle_configToAS   ( msg ); runFlag =  true; break;
+                case "layoutToMon":   handle_layoutToMon  ( msg );                  break;
+                case "texteToMon":    handle_texteToMon   ( msg );                  break;
+
                 default:
                     Log.e( TAG, "Not supported msg: " + msg );
                     break;
@@ -342,6 +360,61 @@ public class ORB_Communicator extends    RobotCommunicator
     }
 
     //---------------------------------------------------------------
+    private void handle_layoutToMon(JSONObject msg )
+    {
+        try
+        {
+            if(msg.has("data"))
+            {
+                synchronized (orbManager)
+                {
+                    JSONObject data = msg.getJSONObject( "data" );
+                    monitorManager.setLayout( data );
+                }
+            }
+            else {
+                Log.e( TAG, " processing: " + msg );
+            }
+        }
+        catch (final JSONException e)
+        {
+            // ignore invalid messages
+            Log.e( TAG, "Json parsing error: " + e.getMessage() + " processing: " + msg );
+        }
+    }
+
+    //---------------------------------------------------------------
+    private void handle_texteToMon(JSONObject msg )
+    {
+        try
+        {
+            if(msg.has("data"))
+            {
+                synchronized (orbManager)
+                {
+                    JSONObject data = msg.getJSONObject( "data" );
+                    JSONArray texte = data.getJSONArray( "texte" );
+
+                    String str = "";
+                    for( byte z = 0; z < texte.length(); z++ )
+                    {
+                        str += texte.getString( z ) +"\n";
+                    }
+                    monitorManager.setText( str );
+                }
+            }
+            else {
+                Log.e( TAG, " processing: " + msg );
+            }
+        }
+        catch (final JSONException e)
+        {
+            // ignore invalid messages
+            Log.e( TAG, "Json parsing error: " + e.getMessage() + " processing: " + msg );
+        }
+    }
+
+    //---------------------------------------------------------------
     // Report to JavaScript
     //---------------------------------------------------------------
     //---------------------------------------------------------------
@@ -484,6 +557,27 @@ public class ORB_Communicator extends    RobotCommunicator
         }
     }
 
+ 
+    //---------------------------------------------------------------
+    @Override
+    public void reportMonitor()
+    {
+        if( Monitor_Activity.DataHolder.enableReport == true ) {
+            byte key = monitorManager.getKey();
+            JSONObject msg = new JSONObject();
+            try {
+                msg.put("target", "orb");
+                msg.put("type", "keyFromMon");
+                JSONObject data = new JSONObject();
+                data.put("key", key);
+                msg.put("data", data);
+            } catch (JSONException e) {
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+            }
+            sendToJS(msg.toString());
+        }
+    }
+
     //---------------------------------------------------------------
     //
     //---------------------------------------------------------------
@@ -542,7 +636,10 @@ public class ORB_Communicator extends    RobotCommunicator
                                            public void onReceiveValue(String value)
                                            {
                                                if( value == null || value.compareTo("true") != 0 )
+                                               {
                                                    runFlag = false;
+                                                   Monitor_Activity.DataHolder.enableReport = false;
+                                               }
                                            }
                                        });
                                    }

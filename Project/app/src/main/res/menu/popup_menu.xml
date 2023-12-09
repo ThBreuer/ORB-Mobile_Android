@@ -8,6 +8,10 @@
         android:id="@+id/action_connect"
         android:title="@string/pref_connect" />
     <item
+        android:id="@+id/monitor"
+        android:title="Monitor" />
+
+    <item
         android:id="@+id/configORB"
         android:title="@string/pref_configure_orb" />
     <item

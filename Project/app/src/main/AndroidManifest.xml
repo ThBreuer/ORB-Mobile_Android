@@ -38,9 +38,15 @@
             android:label="Select BT Device"
             android:theme="@android:style/Theme.Dialog"
             android:configChanges="orientation|keyboardHidden" />
+
         <activity android:name=".ConfigORB_Activity"
             android:label="Configure ORB"
             android:theme="@android:style/Theme.Dialog"
+            android:configChanges="orientation|keyboardHidden" />
+
+        <activity android:name="orb.device.Monitor.Monitor_Activity"
+            android:label="Monitor ORB"
+            android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden" />
 
 

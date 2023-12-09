@@ -7,6 +7,18 @@ function setRobot()
   send(JSON.stringify(cmd) );
 }
 
+function startMonitor()
+{
+  var cmd = { target:"internal", type:"startMonitor", robot:"orb" };
+  send(JSON.stringify(cmd) );
+}
+
+function stopMonitor()
+{
+  var cmd = { target:"internal", type:"stopMonitor", robot:"orb" };
+  send(JSON.stringify(cmd) );
+}
+
 function scanRobot( )
 {
 var cmd = { target:"orb", type:"startScan" };
