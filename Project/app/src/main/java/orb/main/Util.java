@@ -53,7 +53,7 @@ public class Util {
         AlertDialog.Builder prefDialogBuilder = new AlertDialog.Builder(orLabActivity);
         prefDialogBuilder.setView(prefView);
         prefDialogBuilder.setMessage(R.string.text_change);
-        prefDialogBuilder.setTitle(R.string.pref_title_url);
+        prefDialogBuilder.setTitle(R.string.pref_orl);
         prefDialogBuilder.setCancelable(false);
         prefDialogBuilder.setPositiveButton(R.string.btn_OK,
                 new DialogInterface.OnClickListener() {

@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/settings"
-        android:title="@string/pref_title_url"/>
-    <item
-        android:id="@+id/action_connect"
-        android:title="@string/pref_connect" />
-    <item
-        android:id="@+id/monitor"
-        android:title="Monitor" />
-
-    <item
-        android:id="@+id/configORB"
-        android:title="@string/pref_configure_orb" />
-    <item
-        android:id="@+id/service"
-        android:title="@string/pref_service" />
-    <item
-        android:id="@+id/about"
-        android:title="@string/pref_title_about" />
-    <item
-        android:id="@+id/exit"
-        android:title="@string/pref_title_exit"/>
+    <group
+        android:id="@+id/group_server"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <item
+            android:id="@+id/orl"
+            android:title="@string/pref_orl" />
+        <item
+            android:id="@+id/server"
+            android:title="@string/pref_server" />
+    </group>
+    <group
+        android:id="@+id/group_connect"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <item
+            android:id="@+id/action_connect"
+            android:title="@string/pref_connect" />
+    </group>
+    <group
+        android:id="@+id/group_other"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <item
+            android:id="@+id/monitor"
+            android:title="Monitor" />
+        <item
+            android:id="@+id/configORB"
+            android:title="@string/pref_configure_orb" />
+        <item
+            android:id="@+id/service"
+            android:title="@string/pref_service" />
+        <item
+            android:id="@+id/about"
+            android:title="@string/pref_title_about" />
+        <item
+            android:id="@+id/exit"
+            android:title="@string/pref_title_exit" />
+    </group>
 
 </menu>

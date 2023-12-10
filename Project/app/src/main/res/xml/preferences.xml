@@ -5,6 +5,6 @@
         android:key="prefUrl"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="@string/pref_title_url">
+        android:title="@string/pref_orl">
     </EditTextPreference>
 </PreferenceScreen>

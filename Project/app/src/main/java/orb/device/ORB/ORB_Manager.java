@@ -100,7 +100,7 @@ public class ORB_Manager
         {
             if( orb_USB.isConnected() || orb_BT.isConnected() )
             {
-                if( updateTimeout++ > 100 )
+                if( updateTimeout++ > 200 )
                 {
                     orb_report.reportDisconnect();
                     orb_USB.close();

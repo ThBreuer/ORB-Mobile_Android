@@ -5,6 +5,8 @@
  Changes made by Thomas Breuer:
  * - class renamed
  * - Comments revised
+ * - Start with local welcome page
+ * - New Monitor activity (user I/O)
  * - Additional menu item: Connect to ORB
  * - Additional menu item: Configure the ORB
  * - Additional menu item: Load service page from assets
@@ -32,6 +34,7 @@ import android.os.Environment;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.DownloadListener;
@@ -48,6 +51,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.view.MenuCompat;
+
 import static java.lang.String.format;
 
 import org.json.JSONException;
@@ -101,7 +106,11 @@ public class MainActivity extends Activity
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String orUrl = sharedPreferences.getString("prefUrl", "");
+
+        //-----------------------------------------------------------
+        // TB: Start with local welcome page
+        //-----------------------------------------------------------
+        String orUrl = "file:///android_asset/HTML/welcome.html";
 
         //-----------------------------------------------------------
         // TB: WiFi connected not checked, app should run without WiFi
@@ -153,7 +162,6 @@ public class MainActivity extends Activity
                 }
             }
         });
-
         this.orView.loadUrl(orUrl);
         this.orView.setWebChromeClient(new orWebViewClient());
         this.orView.setWebViewClient(new myWebViewClient());
@@ -174,8 +182,6 @@ public class MainActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
-
-       /// orbManager.connect("USB");
 
     }
 
@@ -280,6 +286,9 @@ public class MainActivity extends Activity
                     //     supported. Nothing to do here
                     //-----------------------------------------------
                 }
+                //-------------------------------------------
+                // TB: New Monitor activity (user I/O)
+                //-------------------------------------------
                 else if( (type.equals("startMonitor"))) {
                     startMonitor();
                 }
@@ -323,13 +332,17 @@ public class MainActivity extends Activity
     public void openSettings(View v) {
         PopupMenu popup = new PopupMenu(getBaseContext(), v);
         popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+        MenuCompat.setGroupDividerEnabled(popup.getMenu(), true);
 
         //-----------------------------------------------------------------------------------------
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.settings:
+                    case R.id.orl:
+                        orView.loadUrl("https://lab.open-roberta.org/#loadSystem&amp;&amp;orb");
+                        break;
+                    case R.id.server:
                         AlertDialog prefDialog = Util.createSettingsDialog(MainActivity.this, orView);
                         prefDialog.show();
                         break;
@@ -475,10 +488,9 @@ public class MainActivity extends Activity
         serverIntent.putExtra( "USB", isUSB );
         startActivityForResult(serverIntent, REQUEST_BLUETOOTH_DEVICE);
     }
-    //---------------------------------------------------------------
 
     //---------------------------------------------------------------
-    // TB: Additional menu item: Configure the ORB
+    // TB: New Monitor activity (user I/O)
     //---------------------------------------------------------------------------------------------
     void startMonitor()
     {
@@ -486,16 +498,15 @@ public class MainActivity extends Activity
 
         Intent intent = new Intent( this, Monitor_Activity.class );
         startActivity( intent );
-
     }
+
     //---------------------------------------------------------------
-    // TB: Additional menu item: Configure the ORB
+    // TB: New Monitor activity (user I/O)
     //---------------------------------------------------------------------------------------------
     void stopMonitor()
     {
         Monitor_Activity.DataHolder.stopMonitor();
     }
-    //---------------------------------------------------------------
 
     //---------------------------------------------------------------
     // TB: Additional menu item: Configure the ORB
@@ -518,7 +529,6 @@ public class MainActivity extends Activity
             startActivityForResult( intent, REQUEST_ORB_CONFIG );
         }
     }
-    //---------------------------------------------------------------
 
     //---------------------------------------------------------------
     // TB: Show ORB state (connection, battery)
@@ -546,5 +556,4 @@ public class MainActivity extends Activity
             }
         });
     }
-    //---------------------------------------------------------------
 }

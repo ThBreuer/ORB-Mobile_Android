@@ -1,7 +1,7 @@
 <resources>
     <string name="pref_title_about">Über</string>
     <string name="pref_title_exit">Beenden</string>
-    <string name="pref_title_url">Open Roberta Lab URL</string>
+    <string name="pref_orl">Open Roberta Lab URL</string>
     <string name="pref_connect">Mit Roboter verbinden</string>
     <string name="pref_service">Service</string>
     <string name="pref_configure_orb">ORB konfigurieren</string>
