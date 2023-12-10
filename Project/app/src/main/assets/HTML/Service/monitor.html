@@ -25,21 +25,21 @@
 
 var monitorToApp = {
   target:"orb",
-  type:"texteToMon",
-  data:{texte:["","","",""]}
+  type:"textToMon",
+  data:{text:["","","",""]}
 };
 
 var monitorFromApp = {
   target:"orb",
   type:"keyFromMon",
-  data:{key:0}
+  data:{key:""}
 };
 
 var monitorLayout = {
   target:"orb",
   type:"layoutToMon",
   data: {
-    "Tasten": {
+    "button": {
       "A1"  : "",
       "A2"  : "-",
       "A3"  : "+",
@@ -134,42 +134,42 @@ function appToJs(txt)
     if( res.target === "orb" && res.type ==="keyFromMon" ) //&& res.key !== undefined)
     {
        cnt++;
-       monitorToApp.data.texte[0] = "cnt:"+cnt;
+       monitorToApp.data.text[0] = "cnt:"+cnt;
 
        keyNow = res.data.key;
-       var keyEvent = 0;
-       if( keyNow != 0 && keyLast == 0 )
+       var keyEvent = "";
+       if( keyNow != "" && keyLast == "" )
        {
-         monitorToApp.data.texte[1] = "key event:"+keyNow;
+         monitorToApp.data.text[1] = "key event:"+keyNow;
          keyEvent = keyNow;
        }
        keyLast = keyNow;
        
        switch(keyEvent)
        {
-         case 2: speed = speed - 50;  break;
-         case 3: speed = speed + 50;  break;
+         case "A2": speed = speed - 50;  break;
+         case "A3": speed = speed + 50;  break;
        }
        
        switch( keyNow )
        {
-         case 10: start( 2, 2);  break;
-         case 13: start( 1, 1);  break;
-         case 15: start(-1, 1);  break;
-         case 17: start( 1,-1);  break;
-         case 19: start(-1,-1); break;
+         case "B2" : start( 2, 2);  break;
+         case "B5" : start( 1, 1);  break;
+         case "B7" : start(-1, 1);  break;
+         case "B9" : start( 1,-1);  break;
+         case "B11": start(-1,-1); break;
          default: stop();
        }
        
-       monitorToApp.data.texte[2] = "key state:"+keyNow;
-     //  monitorToApp.data.texte[3] = "speed:"+speed;
+       monitorToApp.data.text[2] = "key state:"+keyNow;
+     //  monitorToApp.data.text[3] = "speed:"+speed;
     
        send(JSON.stringify(monitorToApp) );
     }
     else    if( res.target === "orb" && res.type ==="propFromORB" )
     {
       res = JSON.parse(txt);
-      monitorToApp.data.texte[3] = "speed:"+speed+" pwr:"+res.data.Motor[0].pwr;
+      monitorToApp.data.text[3] = "speed:"+speed+" pwr:"+res.data.Motor[0].pwr;
     }
 
   }

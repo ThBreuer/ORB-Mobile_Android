@@ -134,7 +134,7 @@ public class ORB_Communicator extends    RobotCommunicator
                 case "commandToAS":   handle_commandToAS  ( msg ); runFlag =  true; break;
                 case "configToAS":    handle_configToAS   ( msg ); runFlag =  true; break;
                 case "layoutToMon":   handle_layoutToMon  ( msg );                  break;
-                case "texteToMon":    handle_texteToMon   ( msg );                  break;
+                case "textToMon":     handle_textToMon    ( msg );                  break;
 
                 default:
                     Log.e( TAG, "Not supported msg: " + msg );
@@ -384,7 +384,7 @@ public class ORB_Communicator extends    RobotCommunicator
     }
 
     //---------------------------------------------------------------
-    private void handle_texteToMon(JSONObject msg )
+    private void handle_textToMon(JSONObject msg )
     {
         try
         {
@@ -393,12 +393,12 @@ public class ORB_Communicator extends    RobotCommunicator
                 synchronized (orbManager)
                 {
                     JSONObject data = msg.getJSONObject( "data" );
-                    JSONArray texte = data.getJSONArray( "texte" );
+                    JSONArray  text = data.getJSONArray( "text" );
 
                     String str = "";
-                    for( byte z = 0; z < texte.length(); z++ )
+                    for( byte z = 0; z < text.length(); z++ )
                     {
-                        str += texte.getString( z ) +"\n";
+                        str += text.getString( z ) +"\n";
                     }
                     monitorManager.setText( str );
                 }
@@ -563,7 +563,7 @@ public class ORB_Communicator extends    RobotCommunicator
     public void reportMonitor()
     {
         if( Monitor_Activity.DataHolder.enableReport == true ) {
-            byte key = monitorManager.getKey();
+            String key = monitorManager.getKey();
             JSONObject msg = new JSONObject();
             try {
                 msg.put("target", "orb");

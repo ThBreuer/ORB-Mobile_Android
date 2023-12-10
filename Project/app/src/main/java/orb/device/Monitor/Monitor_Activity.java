@@ -22,17 +22,44 @@ import orb.main.R;
 
 public class Monitor_Activity extends Activity implements Runnable
 {
+    String keyTable[]  = new String[22];
+    
+
+    
     private static final String TAG = orb.device.Monitor.Monitor_Activity.class.getSimpleName();
 
     public Monitor_Activity()
     {
+        keyTable[ 0] = "";
+        keyTable[ 1] = "A1";
+        keyTable[ 2] = "A2";
+        keyTable[ 3] = "A3";
+        keyTable[ 4] = "A4";
+        keyTable[ 5] = "A5";
+        keyTable[ 6] = "A6";
+        keyTable[ 7] = "A7";
+        keyTable[ 8] = "A8";
+        keyTable[ 9] = "B1";
+        keyTable[10] = "B2";
+        keyTable[11] = "B3";
+        keyTable[12] = "B4";
+        keyTable[13] = "B5";
+        keyTable[14] = "B6";
+        keyTable[15] = "B7";
+        keyTable[16] = "B8";
+        keyTable[17] = "B9";
+        keyTable[18] = "B10";
+        keyTable[19] = "B11";
+        keyTable[20] = "B12";
+        keyTable[21] = "C1";
+
         mainThread = new Thread( this );
     }
 
     //---------------------------------------------------------------------------------------------
     public static class DataHolder {
         private static String data;
-        private static byte key;
+        private static String key;
         private static JSONObject layout;
         private static boolean isNewLayout = false;
 
@@ -91,13 +118,13 @@ public class Monitor_Activity extends Activity implements Runnable
         }
 
         //-----------------------------------------------------------------------------------------
-        public static byte getKey() {return key;}
+        public static String getKey() {return key;}
 
         //-----------------------------------------------------------------------------------------
         public static String getData() {return data;}
 
         //-----------------------------------------------------------------------------------------
-        public static void setKey(byte key) {DataHolder.key = key;}
+        public static void setKey(String key) {DataHolder.key = key;}
 
         //-----------------------------------------------------------------------------------------
         public static void setData(String data) {DataHolder.data = data; DataHolder.enableReport=true; }
@@ -134,7 +161,7 @@ public class Monitor_Activity extends Activity implements Runnable
     public void onDestroy()
     {
         runMainThread = false;
-        DataHolder.setKey( (byte)0 );
+        DataHolder.setKey( new String("") );
         super.onDestroy();
     }
 
@@ -180,7 +207,7 @@ public class Monitor_Activity extends Activity implements Runnable
     {
         try
         {
-            JSONObject array = layout.getJSONObject( "Tasten");
+            JSONObject array = layout.getJSONObject( "button");
             setKeyText(R.id.button_A1, array.getString("A1"));
             setKeyText(R.id.button_A2, array.getString("A2"));
             setKeyText(R.id.button_A3, array.getString("A3"));
@@ -245,7 +272,7 @@ public class Monitor_Activity extends Activity implements Runnable
                     break;
                 }
             }
-            DataHolder.setKey( key );
+            DataHolder.setKey( keyTable[key] );
 
             runOnUiThread(new Runnable() {
                 public void run() {

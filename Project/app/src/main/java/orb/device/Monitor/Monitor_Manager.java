@@ -52,7 +52,7 @@ public class Monitor_Manager
     }
 
     //--------------------------------------------------------------------------------------------
-    public byte getKey()
+    public String getKey()
     {
         return( Monitor_Activity.DataHolder.getKey() );
     }
