@@ -9,7 +9,7 @@
     <string name="text_state_orb_not_connected">Roboter nicht verbunden</string>
     <string name="text_state_batterie">Batt</string>
     <string name="text_change">Gebe hier die neue URL für das Open Roberta Lab ein, etwa so:  http://ip:port</string>
-    <string name="text_about_content"><i>ORB-Mobile</i> ist eine App zur Steuerung von Robotern, die mit dem <b>O</b>pen-<b>R</b>obotic-<b>B</b>oard ausgestattet sind und mit <a target="_blank" href="https://www.open-roberta.org/">»Open Roberta Lab«</a> programmiert werden.</string>
+    <string name="text_about_content"><i>ORB-Mobile</i> ist eine App zur Steuerung von Robotern, die mit dem <b>O</b>pen-<b>R</b>obotic-<b>B</b>oard ausgestattet sind und mit <a href="https://www.open-roberta.org" target="_blank">Open Roberta Lab</a> programmiert werden.</string>
     <string name="btn_cancel">Abbrechen</string>
     <string name="btn_OK">OK</string>
     <string name="pref_server">Server</string>
