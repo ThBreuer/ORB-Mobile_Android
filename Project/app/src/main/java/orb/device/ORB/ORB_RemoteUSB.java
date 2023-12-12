@@ -15,6 +15,7 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.hardware.usb.UsbRequest;
+import android.os.Build;
 import android.util.Log;
 
 import android.widget.Toast;
@@ -22,6 +23,9 @@ import android.widget.Toast;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.TimeoutException;
+
+import orb.main.R;
 
 
 // *******************************************************************
@@ -60,6 +64,14 @@ class ORB_RemoteUSB extends ORB_Remote
 
         activity.registerReceiver(usbReceiver, filter);
 
+        permissionIntent = PendingIntent.getBroadcast(activity,
+                0,
+                new Intent(UsbManager.ACTION_USB_DEVICE_DETACHED),
+                PendingIntent.FLAG_MUTABLE);
+        filter = new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED);
+
+        activity.registerReceiver(usbReceiver, filter);
+
         open();
 
         //mUsbManager.requestPermission(device, permissionIntent);
@@ -80,15 +92,31 @@ class ORB_RemoteUSB extends ORB_Remote
             }
             else if( UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action) )
             {
+                // todo Toast raus???
+                // it doesn't make sense because permission is requested too
+                /*activity.runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        Toast.makeText(activity, R.string.toast_usb_connected,Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                 */
                 open(); //setDevice(device);
             }
             else if( UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action) )
             {
-/*                if( mDevice != null && mDevice.equals(device) )
+                // Toast raus???
+                activity.runOnUiThread(new Runnable()
                 {
-                    setDevice(null);
-                }
- */
+                    @Override
+                    public void run()
+                    {
+                        Toast.makeText(activity, R.string.toast_usb_deconnected,Toast.LENGTH_SHORT).show();
+                    }
+                });
                 close();
             }
 
@@ -138,23 +166,14 @@ class ORB_RemoteUSB extends ORB_Remote
     //---------------------------------------------------------------
     public void close()
     {
-        if( usbConnected && mConnection != null )
-        {
-            mConnection.close();
-        }
-        usbConnected = false;
-
-        // todo Toast raus???
-        activity.runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                Toast.makeText(activity,"USB Verbindung getrennt",Toast.LENGTH_SHORT).show();
+      //  synchronized (this) {
+            if (usbConnected && mConnection != null) {
+                mConnection.close();
             }
-        });
+            usbConnected = false;
 
-        // todo: close usb device
+            // todo: close usb device
+       // }
     }
 
     //---------------------------------------------------------------
@@ -211,16 +230,6 @@ class ORB_RemoteUSB extends ORB_Remote
                 requestOUT = new UsbRequest();
                 requestOUT.initialize( mConnection, epOUT );
                 usbConnected = true;
-
-                // Toast raus???
-               activity.runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        Toast.makeText(activity,"Mit ORB über USB verbunden",Toast.LENGTH_SHORT).show();
-                    }
-                });
             }
             else
             {
@@ -239,11 +248,22 @@ class ORB_RemoteUSB extends ORB_Remote
     {
         int  size = orb_manager.fill(bufferOUT);
 
-        requestOUT.queue( bufferOUT, 64 );
+        requestOUT.queue( bufferOUT, size );
 
-        if( mConnection.requestWait() == requestOUT ) // wait for status event
-        {
-            //Log.i(TAG, "CONFIG");
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if( mConnection.requestWait(500) == requestOUT ) // wait for status event
+                {
+                    //Log.i(TAG, "CONFIG");
+                }
+            }
+            else {
+                if( mConnection.requestWait() == requestOUT ) // wait for status event
+                {
+                    //Log.i(TAG, "CONFIG");
+                }
+            }
+        } catch (TimeoutException e) {
         }
     }
 
@@ -253,10 +273,22 @@ class ORB_RemoteUSB extends ORB_Remote
         if( usbConnected ) {
             requestIN.queue(bufferIN, 64+1);  // queue a request on the interrupt endpoint
 
-            if (mConnection.requestWait() == requestIN) // wait for status event
-            {
-                orb_manager.process(bufferIN);
-                return (true);
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    if (mConnection.requestWait(500) == requestIN) // wait for status event
+                    {
+                        orb_manager.process(bufferIN);
+                        return (true);
+                    }
+                }
+                else {
+                    if (mConnection.requestWait() == requestIN) // wait for status event
+                    {
+                        orb_manager.process(bufferIN);
+                        return (true);
+                    }
+                }
+            } catch (TimeoutException e) {
             }
         }
         return( false );
@@ -266,14 +298,14 @@ class ORB_RemoteUSB extends ORB_Remote
     protected boolean update()
     {
         boolean ret = false;
-        synchronized (this)
-        {
+        //synchronized (this)
+        //{
             if( usbConnected && updateIn() )
             {
                 ret = true;
             }
             updateOut();
-        }
+       //}
         return( ret );
     }
 } // end of class

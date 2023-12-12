@@ -135,12 +135,21 @@ public class ORB_Manager
         }
     }
 
+    int fillCnt = 0;
     //---------------------------------------------------------------
     // Die Schnittstelle ist bereit, neue Daten zu versenden,
     // diese ggf. jetzt eintragen
     int fill(  ByteBuffer data )
     {
         int size = 0;
+
+        fillCnt++;
+
+        if( fillCnt%2 == 0 && propToORB.isNew() )
+        {
+            size = propToORB.fill(data);
+            return( size );
+        }
 
         if( configToORB.isNew() )
         {
