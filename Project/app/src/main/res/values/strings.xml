@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name" translatable="false">ORB Mobile</string>
-    <string name="pref_orl">Open Roberta Lab URL</string>
+    <string name="label_app_name" translatable="false">ORB Mobile</string>
+    <string name="pref_orl">Open Roberta Lab</string>
     <string name="pref_title_about">About</string>
     <string name="pref_title_exit">Exit</string>
     <string name="pref_connect">Connect to Robot</string>
     <string name="pref_service">Service</string>
     <string name="pref_configure_orb">Configure ORB</string>
     <string name="text_change">Type your new URL for the Open Roberta Lab. Recommended:  http://ip:port</string>
-    <string name="text_about_content"><i>ORB-Mobile</i> is an app for controlling robots that are equipped with the <b>O</b>pen <b>R</b>obotics <b>B</b>oard and programmed with <a target="_blank" href="https://www.open-roberta.org/">»Open Roberta Lab«</a> .</string>
+    <string name="text_about_content"><i>ORB-Mobile</i> is an app for controlling robots that are equipped with the <b>O</b>pen <b>R</b>obotic <b>B</b>oard and programmed with <a href="https://www.open-roberta.org" target="_blank">Open Roberta Lab</a> .</string>
     <string name="text_about_version">Version %s</string>
     <string name="text_about_publish" translatable="false">Thomas Breuer (Hochschule Bonn-Rhein-Sieg), 2023</string>
     <string name="text_state_orb_not_connected">Not connected to Robot</string>
@@ -15,4 +15,9 @@
     <string name="btn_cancel">Cancel</string>
     <string name="btn_OK">OK</string>
     <string name="pref_server">Server</string>
+    <string name="toast_usb_connected">USB connected</string>
+    <string name="toast_usb_deconnected">USB deconnected</string>
+    <string name="label_select_bt_device">Select Connection</string>
+    <string name="label_configure_orb">Configure ORB</string>
+    <string name="label_monitor_orb">Monitor</string>
 </resources>

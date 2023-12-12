@@ -17,7 +17,7 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
+        android:label="@string/label_app_name"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -25,7 +25,7 @@
 
         <activity
             android:name="orb.main.MainActivity"
-            android:label="@string/app_name"
+            android:label="@string/label_app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:exported="true">
@@ -37,19 +37,19 @@
         </activity>
 
         <activity android:name=".BT_DeviceListActivity"
-            android:label="Select BT Device"
+            android:label="@string/label_select_bt_device"
             android:theme="@android:style/Theme.Dialog"
             android:configChanges="orientation|keyboardHidden" />
 
         <activity android:name=".ConfigORB_Activity"
-            android:label="Configure ORB"
+            android:label="@string/label_configure_orb"
             android:theme="@android:style/Theme.Dialog"
             android:configChanges="orientation|keyboardHidden" />
 
         <activity android:name="orb.device.Monitor.Monitor_Activity"
-            android:label="Monitor ORB"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:label="@string/label_monitor_orb"
+            android:theme="@style/AppTheme.NoActionBar" />
 
 
     </application>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+var lang = navigator.language;
+switch( lang.split('-')[0] ) {
+  case "de": window.location.replace("welcome_de.html");break;
+  default:   window.location.replace("welcome.html");break;
+}
+</script>
+</body>
+</html>

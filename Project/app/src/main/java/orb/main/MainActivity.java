@@ -110,8 +110,7 @@ public class MainActivity extends Activity
         //-----------------------------------------------------------
         // TB: Start with local welcome page
         //-----------------------------------------------------------
-        String orUrl = "file:///android_asset/HTML/welcome.html";
-
+        String orUrl = "file:///android_asset/HTML/index.html";
         //-----------------------------------------------------------
         // TB: WiFi connected not checked, app should run without WiFi
         //-----------------------------------------------------------
@@ -162,6 +161,7 @@ public class MainActivity extends Activity
                 }
             }
         });
+
         this.orView.loadUrl(orUrl);
         this.orView.setWebChromeClient(new orWebViewClient());
         this.orView.setWebViewClient(new myWebViewClient());
@@ -182,7 +182,6 @@ public class MainActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     //---------------------------------------------------------------------------------------------
