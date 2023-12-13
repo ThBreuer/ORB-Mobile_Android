@@ -112,10 +112,10 @@ Multiple answers, one per detected device.
 "brickid":"00:06:66:69:38:69","brickname":"ORB-2 3869"}
 ```
 
-| **Parameter** | **Purpose** |
-| ------------- | ----------- |
-| *brickid*     |             |
-| *brickname*   |             |
+| **Parameter** | **Purpose**                                             |
+| ------------- | ------------------------------------------------------- |
+| *brickid*     | MAC address of Bluetooth module or "USB", if available  |
+| *brickname*   | Name of Bluetooth module or "ORB via USB", if available |
 
 ### connect
 
@@ -125,21 +125,21 @@ JS to App:
 {"target":"orb","type":"connect","robot":"00:06:66:69:38:69"}
 ```
 
-| **Parameter** | **Purpose** |
-| ------------- | ----------- |
-| *robot*       |             |
+| **Parameter** | **Purpose**                                            |
+| ------------- | ------------------------------------------------------ |
+| *robot*       | MAC address of Bluetooth module or "USB", if available |
 
 App to JS:
 
 ```
 {"target":"orb","type":"connect","state":"connected",  
-"brickid":"*00:06:66:69:38:69*","brickname":"ORB-2 3869"}
+"brickid":"00:06:66:69:38:69","brickname":"ORB-2 3869"}
 ```
 
-| **Parameter** | **Purpose** |
-| ------------- | ----------- |
-| *brickid*     |             |
-| *brickname*   |             |
+| **Parameter** | **Purpose**                                             |
+| ------------- | ------------------------------------------------------- |
+| *brickid*     | MAC address of Bluetooth module or "USB", if available  |
+| *brickname*   | Name of Bluetooth module or "ORB via USB", if available |
 
 ## <u>ORB Data</u>
 
@@ -159,15 +159,24 @@ JS to App:
                   {"tics":0,"acc":0,"Kp":0,"Ki":0}]}}
 ```
 
-| **Parameter**   | **Purpose**                                        | **typisch** |
-| --------------- | -------------------------------------------------- | ----------- |
-| *Sensor.type*   |                                                    |             |
-| *Sensor.mode*   |                                                    |             |
-| *Sensor.option* |                                                    |             |
-| *Motor.tics*    | Anzahl Encoder-Impulse pro Umdrehung               | 144         |
-| *Motor.acc*     | Beschleunigung bzw. Verzögerung im Modus "Move-To" | 50          |
-| *Motor.Kp*      | Proportional-Faktor der PI-Regelung                | 50          |
-| *Motor.Ki*      | Integral-Faktor der PI-Regelung                    | 30          |
+| **Parameter**   | **Purpose**                                                                                                                              |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| *Sensor.type*   | 0: ANALOG<br>Unspecified analog sensor (e.g. NXT-Light) or digital sensor                                                                |
+|                 | 1: UART<br> EV3-UART Sensor (e.g. color, ultrasonic, IR)                                                                                 |
+|                 | 2: I2C<br> Sensor with I2C interface (e.g. NXT ultrasonic)                                                                               |
+|                 | 3: TOF<br/>Time of flight based sensor (e.g. ultrasonic)                                                                                 |
+|                 | 4: TOUCH<br> NXT or EV3 touch sensor                                                                                                     |
+| *Sensor.mode*   | The purpose of this parameter depends on *Sensor.type*                                                                                   |
+|                 | UART<br>EV3 sensor mode, see LEGO-Mindstrom documentation                                                                                |
+|                 | I2C<br> 0: NXT ultrasonic                                                                                                                |
+|                 | Other: not used                                                                                                                          |
+| *Sensor.option* | The purpose of this parameter depends on *Sensor.type*<br>                                                                               |
+|                 | ANALOG<br>I/O configuration of pin 1,2,5 and 6. <br>In case of NXT light sensor, use 1792 to switch off or 3840 to switch on the LED<br> |
+|                 | Other: not used                                                                                                                          |
+| *Motor.tics*    | Number of encoder tics per revolution                                                                                                    |
+| *Motor.acc*     | Acceleration of position control                                                                                                         |
+| *Motor.Kp*      | Proportional part of PI speed control                                                                                                    |
+| *Motor.Ki*      | Integral part of PI speed control                                                                                                        |
 
 The app starts sending propFromORB periodically as long as the Javascript is running.
 
@@ -181,20 +190,25 @@ JS to App:
                  {"mode":0,"speed":0,"pos":0},
                  {"mode":0,"speed":0,"pos":0},  
                  {"mode":0,"speed":0,"pos":0}],  
-        "Servo":[{"mode":0,"pos":0},  
-                 {"mode":0,"pos":0}]}}
+        "Servo":[{"speed":0,"pos":0},  
+                 {"speed":0,"pos":0}]}}
 ```
 
-| **Parameter** | **Purpose**                                                                                                                                        |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| *Motor.mode*  | 0: POWER_MODE<br> Die durch speed angegebene Spannung wird eingestellt                                                                             |
-|               | 1: BRAKE_MODE<br> Bremsbetrieb durch Kurzschluss des Motors                                                                                        |
-|               | 2: SPEED_MODE <br>Die durch speed angegebene Drehzahl wird geregelt                                                                                |
-|               | 3: MOVETO_MODE<br>Die durch pos angegebene Motor-Position wird angefahren, die in speed angegebene Geschwindigkeit wird dabei nicht überschritten. |
-| *Motor.speed* | Spannung im Bereich -1000 bis 1000 (Einheit: 1/1000 der Versorgungsspannung)<br><u>oder</u><br> Geschwindigkeit in 1/1000 Umdrehungen/Sekunde      |
-| *Motor.pos*   | Absolute Position in 1/1000 Umdrehungen                                                                                                            |
-| *Servo.mode*  |                                                                                                                                                    |
-| *Servo.pos*   |                                                                                                                                                    |
+| **Parameter** | **Purpose**                                                                                                           |
+| ------------- | --------------------------------------------------------------------------------------------------------------------- |
+| *Motor.mode*  | 0: POWER<br> The voltage indicated by *speed* is set                                                                  |
+|               | 1: BRAKE<br> Braking operation due to motor short circuit                                                             |
+|               | 2: SPEED <br>The rotation specified by speed is regulated                                                             |
+|               | 3: MOVETO<br>The motor position specified by *pos* will be reached. The rotation specified in *speed* is not exceeded |
+| *Motor.speed* | The purpose of this parameter depends on *Motor.mode*                                                                 |
+|               | POWER<br>Voltage in range of -1000 bis 1000 (unit: 1/1000 of supply voltage)                                          |
+|               | MOVETO<br>Rotation speed (unit 1/1000 rotations per second)                                                           |
+|               | Other: not used                                                                                                       |
+| *Motor.pos*   | The purpose of this parameter depends on *Motor.mode*                                                                 |
+|               | MOVETO<br>Absolut position (unit: 1/1000 rotation)                                                                    |
+|               | Other: not used                                                                                                       |
+| *Servo.speed* | Servo positioning speed (unit: 1/10 of control range per second)<br> or 0 to switch servo off                         |
+| *Servo.pos*   | Servo position (unit: 1/100 of control range)                                                                         |
 
 The app starts sending *propFromORB* periodically as long as the Javascript is running.
 
@@ -212,23 +226,23 @@ App to JS:
                   {"valid":false,"type":0,"option":0,"value":[0,0]},  
                   {"valid":false,"type":0,"option":0,"value":[0,0]},  
                   {"valid":false,"type":0,"option":0,"value":[0,0]}],  
-        "Vcc":0,
         "Digital":[false,false],
+        "Vcc":0,
         "Status":0}}
 ```
 
-| **Parameter**   | **Purpose**                                                                     |
-| --------------- | ------------------------------------------------------------------------------- |
-| *Motor.pwr*     | Motor-Spannung im Bereich -100 bis 100 (Einheit: 1/100 der Versorgungsspannung) |
-| *Motor.speed*   | Gemessene Geschwindigkeit in 1/1000 Umdrehungen/Sekunde                         |
-| *Motor.pos*     | Gemessene absolute Position in 1/1000 Umdrehungen                               |
-| *Sensor.valid*  |                                                                                 |
-| *Sensor.type*   |                                                                                 |
-| *Sensor.option* |                                                                                 |
-| *Sensor.value*  |                                                                                 |
-| *Vcc*           |                                                                                 |
-| *Digital*       |                                                                                 |
-| *Status*        |                                                                                 |
+| **Parameter**   | **Purpose**                                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| *Motor.pwr*     | Output voltage (unit: 1/1000 of supply voltage)                                                              |
+| *Motor.speed*   | Measured rotation speed (unit: 1/1000 rotation per sec)                                                      |
+| *Motor.pos*     | Measured absolut position (unit: 1/1000 rotation)                                                            |
+| *Sensor.valid*  | true, if readings are valid (not supported for all sensor types)                                             |
+| *Sensor.type*   | Used sensor type in actual readings                                                                          |
+| *Sensor.option* | Used sensor mode (EV3 only)                                                                                  |
+| *Sensor.value*  | Sensor reading                                                                                               |
+| *Digital*       | Readings of digital input pins D1 and D2                                                                     |
+| *Vcc*           | Power supply voltage (unit: V)                                                                               |
+| *Status*        | Bit 0: Local application running<br>Bit 1: Acknowledge bit, set once after receiving a *configToORB* message |
 
 ## <u>ORB Settings</u>
 
