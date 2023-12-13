@@ -217,7 +217,7 @@ public class ORB_Communicator extends    RobotCommunicator
                     for( int i = 0; i < servo.length(); i++ )
                     {
                         JSONObject s = servo.getJSONObject( i );
-                        orbManager.setModelServo( i, s.getInt( "mode" ),
+                        orbManager.setModelServo( i, s.getInt( "speed" ),
                                                      s.getInt( "pos"  ) );
                     }
                 }
@@ -501,13 +501,13 @@ public class ORB_Communicator extends    RobotCommunicator
 
                     data.put( "Sensor", sensor );
 
-                    data.put( "Vcc", orbManager.getVcc() );
-
                     JSONArray digital = new JSONArray();
                     digital.put( orbManager.getSensorDigital( (byte) 0 ) );
                     digital.put( orbManager.getSensorDigital( (byte) 1 ) );
 
                     data.put( "Digital", digital );
+
+                    data.put( "Vcc", orbManager.getVcc() );
 
                     data.put( "Status", orbManager.getStatus() );  // TODO: get status
 
